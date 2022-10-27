@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "8QDLLgiK0yjZmhvO7geKvRTTDphaRKcfsie7k4xIBtmTjd2BjALL1i7A67bnzblmZka4aHFxdqAIw0aljQqi/Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\hp\\Documents\\Fiverr\\Homemfra\\DropFilesDropBox\\DropFilesDropBox\\DropFilesDropBox.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hp\\.nuget\\packages\\dropbox.api\\6.33.0\\dropbox.api.6.33.0.nupkg.sha512",
+    "C:\\Users\\hp\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

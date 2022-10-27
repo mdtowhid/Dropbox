@@ -1,0 +1,93 @@
+﻿@page "/"
+@using Dropbox.Api
+@using Dropbox.Api.Files
+
+<PageTitle>Index</PageTitle>
+
+
+@code{
+    //string token = "sl.BR_aB2nWuy6xAuShKS-728PcMI3mhQIASnN_Tus5OH1raWLL5S1Q8hVk2wMcPy2UULpFCchF1ixJ4GRmqtAlbp3Qh37DFFdqdchp-s0OHs5819xnJX1yk5sVvw81h7kF56ofzPYQAbx5";
+    string token = "sl.BR9y3Aq_nPMB4-IlQ7NinXt_ljpJCw_j0rmHDOlkLsDZV5ohmm3pDR5jdSQcRksht6gPt2dnlel_B86hH_eZguikzFIDQEv3rUAdCwQot1xAZloegFzu0xZxPQpyaoSlBur8h6LUJjw1";
+
+
+    async Task<object> GetUserInformation()
+    {
+        using(var dbx = new DropboxClient(token))
+        {
+            var id = await dbx.Users.GetCurrentAccountAsync();
+
+            return new { Name = id.Name.DisplayName, Email = id.Email, C = id.RootInfo};
+
+        }
+    }
+    async Task<object> GetFolderList()
+    {
+        using(var dbx = new DropboxClient(token))
+        {
+            List<string> folderList = new List<string>();
+            var list = await dbx.Files.ListFolderAsync(string.Empty);
+            foreach (var item in list.Entries.Where(i=>i.IsFolder))
+            {
+                folderList.Add(item.Name);
+            }
+
+            return new { FolderList = folderList };
+
+        }
+    }
+    async Task<object> GetFileList()
+    {
+        using(var dbx = new DropboxClient(token))
+        {
+            List<string> fileList = new List<string>();
+            var list = await dbx.Files.ListFolderAsync(string.Empty);
+            foreach (var item in list.Entries.Where(i=>i.IsFile))
+            {
+                fileList.Add(item.Name);
+            }
+
+            return new { FileList = fileList };
+
+        }
+    }
+    async Task DownloadFile()
+    {
+        using(var dbx = new DropboxClient(token))
+        {
+            string folder = "test";
+            string file = "s.ScreenApp-1_11052022.png";
+            using(var response = await dbx.Files.DownloadAsync(folder+"/"+file))
+            {
+                var s = response.GetContentAsByteArrayAsync();
+                s.Wait();
+                var d = s.Result;
+                File.WriteAllBytes(file, d);
+            }
+        }
+    }
+    async Task UploadFile()
+    {
+        string path = @"C:\Users\hp\Pictures\Screenshots\Screenshot (219).png";
+        string fileName = "Screenshot (219).png";
+        string folder = @"/test";
+        string url = "";
+        using(var dbx = new DropboxClient(token))
+        {
+            using (var mem = new MemoryStream(File.ReadAllBytes(path)))
+            {
+                var updated = await dbx.Files.UploadAsync(folder + "/" + fileName, WriteMode.Overwrite.Instance, body: mem);
+            }
+        }
+    }
+
+    protected override async void OnInitialized()
+    {
+        await UploadFile();
+        //object FileList = await GetFileList();
+        //object FolderList = await GetFolderList();
+        //object DropBoxUser = await GetUserInformation();
+    }
+
+
+    
+}
